@@ -21,6 +21,7 @@ export const wrapDocument = async <T extends OpenAttestationDocument>(
     ...getExternalSchema(options.externalSchemaId),
     ...credential,
   };
+  console.log(`document: ${JSON.stringify(document, null, 2)}`);
   // To ensure that base @context exists, but this also means some of our validateW3C errors may be unreachable
   if (!document["@context"]) {
     document["@context"] = ["https://www.w3.org/2018/credentials/v1"];
@@ -63,7 +64,11 @@ export const wrapDocument = async <T extends OpenAttestationDocument>(
   if (errors.length > 0) {
     throw new SchemaValidationError("Invalid document", errors, verifiableCredential);
   }
-  await validateW3C(verifiableCredential);
+  if (options.documentLoader) {
+    await validateW3C(verifiableCredential, options.documentLoader);
+  } else await validateW3C(verifiableCredential);
+
+  //console.log(`verifiableCredential: ${JSON.stringify(document, null, 2)}`);
   return verifiableCredential;
 };
 

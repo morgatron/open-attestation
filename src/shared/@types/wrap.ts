@@ -11,6 +11,7 @@ export interface WrapDocumentOptionV2 {
 export interface WrapDocumentOptionV3 {
   externalSchemaId?: string;
   version: SchemaId.v3;
+  documentLoader?: (url: string) => any;
 }
 
 export const isWrapDocumentOptionV3 = (options: any): options is WrapDocumentOptionV3 => {
